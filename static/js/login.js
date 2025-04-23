@@ -4,7 +4,7 @@ export const login = () => {
     link.setAttribute("rel", "stylesheet");
     link.setAttribute("href", "static/css/login.css");
     setHeader(link);
-    
+
     document.body.innerHTML = "";
 
     let logincontainer = document.createElement("div");
@@ -19,7 +19,7 @@ export const login = () => {
     name.classList.add("input-group");
     let nameLabel = document.createElement("label");
     nameLabel.setAttribute("for", "username");
-    nameLabel.innerText = "Username/Email";
+    nameLabel.innerText = "Email or Username";
     let nameInput = document.createElement("input");
     nameInput.setAttribute("type", "text");
     nameInput.setAttribute("name", "username");
