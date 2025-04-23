@@ -1,4 +1,6 @@
 export const login = () => {
+    document.body.innerHTML = "";
+
     let logincontainer = document.createElement("div");
     logincontainer.classList.add("login-container");
 
@@ -42,4 +44,6 @@ export const login = () => {
     form.appendChild(password);
     form.appendChild(submit);
     logincontainer.appendChild(form);
+
+    document.body.appendChild(logincontainer);
 }
