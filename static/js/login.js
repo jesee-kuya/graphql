@@ -1,4 +1,5 @@
 import { setHeader } from "./script.js";
+
 export const login = () => {
     let link = document.createElement("link");
     link.setAttribute("rel", "stylesheet");
