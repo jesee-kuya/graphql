@@ -53,6 +53,20 @@ export const login = () => {
     logincontainer.appendChild(form);
 
     document.body.appendChild(logincontainer);
+
+    submit.addEventListener("click", (e) => {
+        e.preventDefault();
+        const username = nameInput.value;
+        const password = passwordInput.value;
+
+        if (username === "" || password === "") {
+            alert("Please fill in all fields");
+            return;
+        }
+
+        auth(username, password);
+        form.reset();
+    });
 }
 
 const auth = async (username, password) => {
