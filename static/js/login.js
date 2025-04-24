@@ -54,3 +54,35 @@ export const login = () => {
 
     document.body.appendChild(logincontainer);
 }
+
+const auth = async (username, password) => {
+    try {
+        const credentials = isValidEmail(username)
+            ? { email: username, password }
+            : { username, password };
+
+        const response = await fetch("https://learn.zone01kisumu.ke/api/auth/signin", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+            body: JSON.stringify(credentials)
+        });
+
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+
+        const data = await response.json();
+        console.log(data);
+    } catch (error) {
+        console.error("Error during sign-in:", error);
+    }
+};
+
+
+const isValidEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+}
