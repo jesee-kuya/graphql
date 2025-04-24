@@ -112,7 +112,3 @@ button[type="submit"]:focus {
     padding-right: 40px;
     width: 100%;
 }
-
-.toggle-password.visible {
-    color: #007bff;
-}
