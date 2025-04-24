@@ -39,8 +39,28 @@ export const login = () => {
     passwordInput.setAttribute("name", "password");
     passwordInput.setAttribute("id", "password");
     passwordInput.required = true;
+
+    let toggleButton = document.createElement("button");
+    toggleButton.type = "button";  
+    toggleButton.classList.add("toggle-password"); 
+    toggleButton.innerHTML = "👀"
+
+    // Create wrapper div for input and button
+    let inputWrapper = document.createElement("div");
+    inputWrapper.classList.add("password-wrapper");
+    inputWrapper.appendChild(passwordInput);
+    inputWrapper.appendChild(toggleButton);
+
+    // Add elements to the main container
     password.appendChild(passwordLabel);
-    password.appendChild(passwordInput);
+    password.appendChild(inputWrapper);
+
+    // Add toggle functionality
+    toggleButton.addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('visible');
+    });
 
     let submit = document.createElement("button");
     submit.setAttribute("type", "submit");
