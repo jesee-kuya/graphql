@@ -11,6 +11,7 @@ export const setHeader = (link) => {
     document.head.appendChild(title);
     document.head.appendChild(link);
     let script = document.createElement("script");
+    script.setAttribute("type", "module");
     script.setAttribute("src", "static/js/script.js");
     document.head.appendChild(script);
     let meta = document.createElement("meta");
