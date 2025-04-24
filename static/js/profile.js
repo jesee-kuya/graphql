@@ -3,4 +3,6 @@ const profile = (data) => {
     link.setAttribute("rel", "stylesheet");
     link.setAttribute("href", "static/css/profile.css");
     setHeader(link);
+
+    document.body.innerHTML = "";
 }
