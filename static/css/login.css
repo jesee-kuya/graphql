@@ -90,3 +90,29 @@ button[type="submit"]:focus {
     outline: none;
     box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.4);
 }
+
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1.2em;
+}
+
+#password {
+    padding-right: 40px;
+    width: 100%;
+}
+
+.toggle-password.visible {
+    color: #007bff;
+}
