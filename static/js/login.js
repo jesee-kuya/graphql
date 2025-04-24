@@ -1,4 +1,5 @@
 import { setHeader } from "./script.js";
+import { profile } from "./profile.js";
 
 export const login = () => {
     let link = document.createElement("link");
@@ -101,7 +102,7 @@ const auth = async (username, password) => {
         }
 
         const data = await response.json();
-        console.log(data);
+        profile(data);
     } catch (error) {
         alert(`Error during sign-in: ${error}`);
     }
