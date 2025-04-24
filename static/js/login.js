@@ -71,17 +71,12 @@ export const login = () => {
 
 const auth = async (username, password) => {
     try {
-        const credentials = isValidEmail(username)
-            ? { email: username, password }
-            : { username, password };
-
         const response = await fetch("https://learn.zone01kisumu.ke/api/auth/signin", {
             method: "POST",
             headers: {
+                "Authorization": `Basic ${btoa(`${username}:${password}`)}`,
                 "Content-Type": "application/json",
-                "Accept": "application/json",
             },
-            body: JSON.stringify(credentials)
         });
 
         if (!response.ok) {
@@ -94,9 +89,3 @@ const auth = async (username, password) => {
         alert(`Error during sign-in: ${error}`);
     }
 };
-
-
-const isValidEmail = (email) => {
-    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.test(email);
-}
