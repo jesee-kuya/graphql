@@ -77,7 +77,7 @@ const auth = async (username, password) => {
         const data = await response.json();
         console.log(data);
     } catch (error) {
-        console.error("Error during sign-in:", error);
+        alert(`Error during sign-in: ${error}`);
     }
 };
 
