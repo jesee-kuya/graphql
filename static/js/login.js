@@ -102,7 +102,7 @@ const auth = async (username, password) => {
         }
 
         const data = await response.json();
-        profile(data);
+        sessionStorage.setItem("token", data);
     } catch (error) {
         alert(`Error during sign-in: ${error}`);
     }
