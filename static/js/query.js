@@ -18,6 +18,7 @@ export const getData = async () => {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
             },
+            body: JSON.stringify({ query }),
         })
 
         if (!response.ok) {
