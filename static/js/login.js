@@ -1,5 +1,5 @@
 import { setHeader } from "./script.js";
-import { profile } from "./profile.js";
+import { getData } from "./query.js";
 
 export const login = () => {
     let link = document.createElement("link");
@@ -103,6 +103,7 @@ const auth = async (username, password) => {
 
         const data = await response.json();
         sessionStorage.setItem("token", data);
+        getData();
     } catch (error) {
         alert(`Error during sign-in: ${error}`);
     }
