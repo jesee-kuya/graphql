@@ -7,6 +7,7 @@ export const getData = async () => {
         {
             user {
                 id
+                login
             }
     }
     `
