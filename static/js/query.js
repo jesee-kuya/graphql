@@ -9,6 +9,11 @@ export const getData = async () => {
                 id
                 login
             }
+            role {
+                id
+                name
+                description
+            }
     }
     `
 
