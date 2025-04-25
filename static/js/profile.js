@@ -20,14 +20,78 @@ export const profile = (data) => {
     let information = document.createElement("div");
     information.classList.add("card");
 
+    // In the profile function, modify the informationheader section:
+
     let informationheader = document.createElement("div");
     informationheader.classList.add("card-header");
-    informationheader.innerHTML = `
-        <h2 class="heading">
-            <span class="accent-text"><!-- User icon would go here --></span>
-            User Information
-        </h2>
-    `
+
+    // Create header content container
+    const headerContent = document.createElement("div");
+    headerContent.style.display = 'flex';
+    headerContent.style.justifyContent = 'space-between';
+    headerContent.style.alignItems = 'center';
+    headerContent.style.width = '100%';
+
+    // Create title element
+    const titleContainer = document.createElement("h2");
+    titleContainer.classList.add("heading");
+    titleContainer.innerHTML = `
+    <span class="accent-text"><!-- User icon would go here --></span>
+    User Information
+`;
+
+    // Create logout button
+    const logoutBtn = document.createElement('button');
+    logoutBtn.textContent = 'Log Out';
+    logoutBtn.type = 'button';
+
+    // Apply button styles
+    Object.assign(logoutBtn.style, {
+        background: 'var(--gradient-accent)',
+        color: 'var(--color-text)',
+        padding: '0.5rem 1rem',
+        border: 'none',
+        borderRadius: '0.5rem',
+        fontFamily: 'inherit',
+        fontSize: '0.875rem',
+        fontWeight: '500',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+    });
+
+    // Add hover/active effects
+    logoutBtn.addEventListener('mouseenter', () => {
+        logoutBtn.style.transform = 'translateY(-1px)';
+        logoutBtn.style.boxShadow = '0 10px 15px -3px rgba(0, 0, 0, 0.2)';
+    });
+
+    logoutBtn.addEventListener('mouseleave', () => {
+        logoutBtn.style.transform = 'translateY(0)';
+        logoutBtn.style.boxShadow = '0 4px 6px -1px rgba(0, 0, 0, 0.1)';
+    });
+
+    logoutBtn.addEventListener('mousedown', () => {
+        logoutBtn.style.transform = 'scale(0.98)';
+    });
+
+    logoutBtn.addEventListener('mouseup', () => {
+        logoutBtn.style.transform = 'scale(1)';
+    });
+
+    // Add click handler
+    logoutBtn.addEventListener('click', () => {
+        // Add your logout logic here
+        console.log('Logout initiated');
+        window.location.href = '/logout';
+    });
+
+    // Assemble header
+    headerContent.appendChild(titleContainer);
+    headerContent.appendChild(logoutBtn);
+    informationheader.appendChild(headerContent);
+
+    // The rest of your existing profile function continues...
 
     let informationcontent = document.createElement("div");
     informationcontent.classList.add("card-content");
