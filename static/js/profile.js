@@ -90,11 +90,13 @@ export const profile = (data) => {
     let informationcontentspace = document.createElement("div");
     informationcontentspace.classList.add("content-space");
 
+    let name = data.data.user[0].login;
+
     let infospace = document.createElement("div");
     infospace.classList.add("info-space");
     infospace.innerHTML = `
         <h1 class="main-heading">Jane Doe</h1>
-        <p class="accent-text large-text">@janedoe42</p>
+        <p class="accent-text large-text">@${name}</p>
     `;
 
     let badgecontainer = document.createElement("div");
