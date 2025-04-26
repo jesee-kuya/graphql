@@ -8,11 +8,7 @@ export const getData = async () => {
             user {
                 id
                 login
-            }
-            role {
-                id
-                name
-                description
+                campus
             }
     }
     `
