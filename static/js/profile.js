@@ -90,14 +90,24 @@ export const profile = (data) => {
     let informationcontentspace = document.createElement("div");
     informationcontentspace.classList.add("content-space");
 
-    let name = data.data.user[0].login;
+    let username = data.data.user[0].login;
     let campus = data.data.user[0].campus;
+    let phone = data.data.user[0].attrs.phone;
+    let email = data.data.user[0].attrs.email;
+    let dob = new Date(data.data.user[0].attrs.dateOfBirth).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    let gender = data.data.user[0].attrs.gender;
+    let firstname = data.data.user[0].attrs.firstName;
+    let lastname = data.data.user[0].attrs.lastName;
 
     let infospace = document.createElement("div");
     infospace.classList.add("info-space");
     infospace.innerHTML = `
-        <h1 class="main-heading">Jane Doe</h1>
-        <p class="accent-text large-text">@${name}</p>
+        <h1 class="main-heading">${firstname} ${lastname}</h1>
+        <p class="accent-text large-text">@${username}</p>
     `;
 
     let badgecontainer = document.createElement("div");
@@ -125,7 +135,7 @@ export const profile = (data) => {
                 <div class="detail-icon accent-text"><!-- Phone icon --></div>
                 <div>
                     <p class="detail-label">Phone Number</p>
-                    <p class="detail-value">+1 (555) 123-4567</p>
+                    <p class="detail-value">${phone}</p>
                 </div>
             </div>
 
@@ -134,7 +144,7 @@ export const profile = (data) => {
                 <div class="detail-icon accent-text"><!-- Mail icon --></div>
                 <div>
                     <p class="detail-label">Email</p>
-                    <p class="detail-value">jane.doe@example.com</p>
+                    <p class="detail-value">${email}</p>
                 </div>
             </div>
 
@@ -143,7 +153,7 @@ export const profile = (data) => {
                 <div class="detail-icon accent-text"><!-- Calendar icon --></div>
                 <div>
                     <p class="detail-label">Date of Birth</p>
-                    <p class="detail-value">April 15, 1998</p>
+                    <p class="detail-value">${dob}</p>
                 </div>
             </div>
 
@@ -152,7 +162,7 @@ export const profile = (data) => {
                 <div class="detail-icon accent-text"><!-- User icon --></div>
                 <div>
                     <p class="detail-label">Gender</p>
-                    <p class="detail-value">Female</p>
+                    <p class="detail-value">${gender}</p>
                 </div>
             </div>
         </div>
