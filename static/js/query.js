@@ -9,7 +9,7 @@ export const getData = async () => {
                 id
                 login
                 campus
-                attrs 
+                attrs
             }
     }
     `
