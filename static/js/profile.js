@@ -91,6 +91,7 @@ export const profile = (data) => {
     informationcontentspace.classList.add("content-space");
 
     let name = data.data.user[0].login;
+    let campus = data.data.user[0].campus;
 
     let infospace = document.createElement("div");
     infospace.classList.add("info-space");
@@ -104,7 +105,7 @@ export const profile = (data) => {
     badgecontainer.innerHTML = `
          <div class="badge badge-gray">
              <span class="accent-text"><!-- Location icon --></span>
-             <span>San Francisco Campus</span>
+             <span>${campus} campus</span>
          </div>
          <div class="badge badge-accent">
              <span><!-- Award icon --></span>
