@@ -368,8 +368,12 @@ const xpGraph = (xpData) => {
         yAxis.setAttribute('stroke', 'black');
         lsvg.appendChild(yAxis);
 
-        // X-axis labels
-        const xTicks = [minDate, new Date((minDate.getTime() + maxDate.getTime())/2), maxDate];
+        // X-axis labels (5 evenly spaced dates)
+        const xTickCount = 5;
+        const xTicks = Array.from({ length: xTickCount }, (_, i) => 
+            new Date(minDate.getTime() + (i/(xTickCount-1)) * (maxDate - minDate))
+        );
+
         xTicks.forEach(date => {
             const x = xScale(date);
             // Tick mark
@@ -387,12 +391,19 @@ const xpGraph = (xpData) => {
             label.setAttribute('y', height - padding + 20);
             label.setAttribute('text-anchor', 'middle');
             label.setAttribute('font-size', '12');
-            label.textContent = date.toISOString().split('T')[0];
+            label.textContent = date.toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric' 
+            });
             lsvg.appendChild(label);
         });
 
-        // Y-axis labels
-        const yTicks = [0, maxAmount/2, maxAmount];
+        // Y-axis labels (8 ticks with kB formatting)
+        const yTickCount = 8;
+        const yTicks = Array.from({ length: yTickCount }, (_, i) => 
+            (i/(yTickCount-1)) * maxAmount
+        );
+
         yTicks.forEach(amount => {
             const y = yScale(amount);
             // Tick mark
@@ -410,7 +421,7 @@ const xpGraph = (xpData) => {
             label.setAttribute('y', y + 5);
             label.setAttribute('text-anchor', 'end');
             label.setAttribute('font-size', '12');
-            label.textContent = amount.toLocaleString();
+            label.textContent = `${(amount/1000).toFixed(1)}kB`;
             lsvg.appendChild(label);
         });
     }
@@ -426,7 +437,7 @@ const xpGraph = (xpData) => {
         const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         pathElement.setAttribute('d', path);
         pathElement.setAttribute('fill', 'none');
-        pathElement.setAttribute('stroke', 'steelblue');
+        pathElement.setAttribute('stroke', '#4a90e2');
         pathElement.setAttribute('stroke-width', '2');
         lsvg.appendChild(pathElement);
     }
@@ -437,7 +448,7 @@ const xpGraph = (xpData) => {
             circle.setAttribute('cx', xScale(d.date));
             circle.setAttribute('cy', yScale(d.amount));
             circle.setAttribute('r', '3');
-            circle.setAttribute('fill', 'red');
+            circle.setAttribute('fill', '#e74c3c');
             lsvg.appendChild(circle);
         });
     }
