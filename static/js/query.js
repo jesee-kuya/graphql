@@ -12,6 +12,7 @@ export const getData = async () => {
           id
           profile
           campus
+          login
           
           # Best Skills (Top 5 highest graded results)
           results(order_by: {grade: desc}, limit: 5) {
