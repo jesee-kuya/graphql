@@ -102,7 +102,7 @@ export const profile = (data) => {
     let gender = data.data.user[0].attrs.gender;
     let firstname = data.data.user[0].attrs.firstName;
     let lastname = data.data.user[0].attrs.lastName;
-    let xpData = data.data.user[0].xpTimeline;
+    let xpData = data.data.user[0].xpHistory;
 
 
 
