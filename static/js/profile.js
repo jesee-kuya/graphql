@@ -102,6 +102,19 @@ export const profile = (data) => {
     let gender = data.data.user[0].attrs.gender;
     let firstname = data.data.user[0].attrs.firstName;
     let lastname = data.data.user[0].attrs.lastName;
+    let xpData = data.data.user[0].xpTimeline;
+
+
+
+
+
+
+
+
+
+
+
+
 
     let infospace = document.createElement("div");
     infospace.classList.add("info-space");
@@ -288,9 +301,149 @@ export const profile = (data) => {
         </div>
     `
 
+   
+
     innercontainer.appendChild(gridlayout);
     innercontainer.appendChild(xp);
 
     maincontainer.appendChild(innercontainer);
     document.body.appendChild(maincontainer);
+    xpGraph(xpData);
 }
+
+const xpGraph = (xpData) => {
+    // Clear previous graph
+    let container = document.querySelector(".graph-container");
+    container.innerHTML = '';
+    
+    // Create SVG element
+    let lsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    lsvg.setAttribute("width", "100%");
+    lsvg.setAttribute("height", "500");
+    lsvg.setAttribute("viewBox", "0 0 1000 500");
+    container.appendChild(lsvg);
+
+    // Parse and sort data
+    const parsedData = xpData.map(d => ({
+        date: new Date(d.createdAt),
+        amount: d.amount
+    })).sort((a, b) => a.date - b.date);
+
+    // Dimensions
+    const width = 1000;
+    const height = 500;
+    const padding = 50;
+    
+    // Calculate domains
+    const dates = parsedData.map(d => d.date);
+    const amounts = parsedData.map(d => d.amount);
+    const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
+    const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
+    const maxAmount = Math.max(...amounts);
+
+    // Scaling functions
+    const xScale = date => 
+        padding + ((date - minDate) / (maxDate - minDate)) * (width - 2 * padding);
+        
+    const yScale = amount => 
+        height - padding - (amount / maxAmount) * (height - 2 * padding);
+
+    // Draw functions
+    const drawAxis = () => {
+        // X-axis
+        const xAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        xAxis.setAttribute('x1', padding);
+        xAxis.setAttribute('y1', height - padding);
+        xAxis.setAttribute('x2', width - padding);
+        xAxis.setAttribute('y2', height - padding);
+        xAxis.setAttribute('stroke', 'black');
+        lsvg.appendChild(xAxis);
+
+        // Y-axis
+        const yAxis = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        yAxis.setAttribute('x1', padding);
+        yAxis.setAttribute('y1', padding);
+        yAxis.setAttribute('x2', padding);
+        yAxis.setAttribute('y2', height - padding);
+        yAxis.setAttribute('stroke', 'black');
+        lsvg.appendChild(yAxis);
+
+        // X-axis labels
+        const xTicks = [minDate, new Date((minDate.getTime() + maxDate.getTime())/2), maxDate];
+        xTicks.forEach(date => {
+            const x = xScale(date);
+            // Tick mark
+            const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            tick.setAttribute('x1', x);
+            tick.setAttribute('y1', height - padding);
+            tick.setAttribute('x2', x);
+            tick.setAttribute('y2', height - padding + 5);
+            tick.setAttribute('stroke', 'black');
+            lsvg.appendChild(tick);
+
+            // Date label
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', x);
+            label.setAttribute('y', height - padding + 20);
+            label.setAttribute('text-anchor', 'middle');
+            label.setAttribute('font-size', '12');
+            label.textContent = date.toISOString().split('T')[0];
+            lsvg.appendChild(label);
+        });
+
+        // Y-axis labels
+        const yTicks = [0, maxAmount/2, maxAmount];
+        yTicks.forEach(amount => {
+            const y = yScale(amount);
+            // Tick mark
+            const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            tick.setAttribute('x1', padding - 5);
+            tick.setAttribute('y1', y);
+            tick.setAttribute('x2', padding);
+            tick.setAttribute('y2', y);
+            tick.setAttribute('stroke', 'black');
+            lsvg.appendChild(tick);
+
+            // Amount label
+            const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            label.setAttribute('x', padding - 10);
+            label.setAttribute('y', y + 5);
+            label.setAttribute('text-anchor', 'end');
+            label.setAttribute('font-size', '12');
+            label.textContent = amount.toLocaleString();
+            lsvg.appendChild(label);
+        });
+    }
+
+    const drawLine = () => {
+        let path = '';
+        parsedData.forEach((d, i) => {
+            const x = xScale(d.date);
+            const y = yScale(d.amount);
+            path += `${i === 0 ? 'M' : 'L'} ${x},${y} `;
+        });
+
+        const pathElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathElement.setAttribute('d', path);
+        pathElement.setAttribute('fill', 'none');
+        pathElement.setAttribute('stroke', 'steelblue');
+        pathElement.setAttribute('stroke-width', '2');
+        lsvg.appendChild(pathElement);
+    }
+
+    const drawPoints = () => {
+        parsedData.forEach(d => {
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', xScale(d.date));
+            circle.setAttribute('cy', yScale(d.amount));
+            circle.setAttribute('r', '3');
+            circle.setAttribute('fill', 'red');
+            lsvg.appendChild(circle);
+        });
+    }
+
+    // Draw all elements
+    drawAxis();
+    drawLine();
+    drawPoints();
+};
