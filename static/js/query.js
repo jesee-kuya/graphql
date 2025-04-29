@@ -1,11 +1,11 @@
 import { profile } from "./profile.js";
 
 export const getData = async () => {
-    const endpoint = "https://learn.zone01kisumu.ke/api/graphql-engine/v1/graphql";
+  const endpoint = "https://learn.zone01kisumu.ke/api/graphql-engine/v1/graphql";
 
-    let userId = sessionStorage.getItem("user_id");
+  let userId = sessionStorage.getItem("user_id");
 
-    const query = `
+  const query = `
     {
       user(where: { id: { _eq: "${userId}" } }) {
         id
@@ -38,13 +38,22 @@ export const getData = async () => {
           createdAt
         }
     
-        totalXP: transactions_aggregate(where: { type: { _eq: "xp" } }) {
-          aggregate {
-            sum {
-              amount
-            }
+        totalXP: transactions(
+          where: { _and: [{ eventId: { _eq: 75 } }] },
+          order_by: { createdAt: asc }
+        ) {
+          object {
+            name
+            attrs
+            type
           }
+          amount
+          createdAt
+          eventId
+          path
+          type
         }
+
     
         upTransactions: transactions(where: { type: { _eq: "up" } }) {
           amount
@@ -64,27 +73,27 @@ export const getData = async () => {
       }
     }
     `;
-    
 
 
-    try {
-        let response = await fetch(endpoint, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
-            },
-            body: JSON.stringify({ query }),
-        })
 
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        console.log(data);
-        profile(data);
-    } catch (error) {
-        alert(`Error during sign-in: ${error}`);
+  try {
+    let response = await fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${sessionStorage.getItem("token")}`,
+      },
+      body: JSON.stringify({ query }),
+    })
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
     }
+    const data = await response.json();
+    console.log(data);
+    profile(data);
+  } catch (error) {
+    alert(`Error during sign-in: ${error}`);
+  }
 
 }
