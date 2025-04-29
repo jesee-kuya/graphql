@@ -102,7 +102,11 @@ export const profile = (data) => {
     let gender = data.data.user[0].attrs.gender;
     let firstname = data.data.user[0].attrs.firstName;
     let lastname = data.data.user[0].attrs.lastName;
-    let xpData = data.data.user[0].xpHistory;
+    let xpData = data.data.user[0].xpHistory; // downTransactions
+    let downData = data.data.user[0].downTransactions;
+    let upData = data.data.user[0].upTransactions;
+    let totalXP = data.data.user[0].totalXP.aggregate.sum.amount;
+    console.log("TOtal xp is ", totalXP);
 
 
 
@@ -261,7 +265,7 @@ export const profile = (data) => {
                         </div>
 
                         <!-- Audit Ratio Pie Chart -->
-                        <div class="card-inner audit-ratio">
+                        <div class="card-inner audit-ratio", id="audit-ratio">
                             <h3 class="xp-label accent-text">Audit Ratio</h3>
                             <div class="pie-chart">
                                 <!-- Pie chart would go here -->
@@ -309,6 +313,7 @@ export const profile = (data) => {
     maincontainer.appendChild(innercontainer);
     document.body.appendChild(maincontainer);
     xpGraph(xpData);
+    createPieChart(upData, downData);
 }
 
 const xpGraph = (xpData) => {
@@ -458,3 +463,89 @@ const xpGraph = (xpData) => {
     drawLine();
     drawPoints();
 };
+
+const createPieChart = (upData, downData) => {
+    // Calculate totals
+    const totalUp = upData.reduce((sum, d) => sum + d.amount, 0);
+    const totalDown = downData.reduce((sum, d) => sum + d.amount, 0);
+    const total = totalUp + totalDown;
+    
+    // Handle edge case with no data
+    if (total === 0) return;
+
+    // Create SVG element
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", "400");
+    svg.setAttribute("height", "400");
+    svg.setAttribute("viewBox", "0 0 200 200");
+
+    // Chart configuration
+    const centerX = 100;
+    const centerY = 100;
+    const radius = 80;
+    const upColor = "#4CAF50";
+    const downColor = "#F44336";
+
+    // Calculate angles
+    const upAngle = (totalUp / total) * 2 * Math.PI;
+    const downAngle = (totalDown / total) * 2 * Math.PI;
+
+    // Draw Up slice
+    const upPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    upPath.setAttribute("d", describeArc(centerX, centerY, radius, 0, upAngle));
+    upPath.setAttribute("fill", upColor);
+    svg.appendChild(upPath);
+
+    // Draw Down slice
+    const downPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    downPath.setAttribute("d", describeArc(centerX, centerY, radius, upAngle, upAngle + downAngle));
+    downPath.setAttribute("fill", downColor);
+    svg.appendChild(downPath);
+
+    // Add labels
+    addLabel(svg, centerX, centerY, radius/1.5, upAngle/2, 
+            `${((totalUp/total)*100).toFixed(1)}% UP`, upColor);
+    addLabel(svg, centerX, centerY, radius/1.5, upAngle + downAngle/2, 
+            `${((totalDown/total)*100).toFixed(1)}% DOWN`, downColor);
+
+    // Add to DOM
+    const container = document.getElementById("audit-ratio");
+    container.innerHTML = '';
+    container.appendChild(svg);
+
+    // Helper function to create arc path
+    function describeArc(x, y, radius, startAngle, endAngle) {
+        const start = polarToCartesian(x, y, radius, endAngle);
+        const end = polarToCartesian(x, y, radius, startAngle);
+        const largeArcFlag = endAngle - startAngle <= Math.PI ? 0 : 1;
+
+        return [
+            "M", x, y,
+            "L", start.x, start.y,
+            "A", radius, radius, 0, largeArcFlag, 0, end.x, end.y,
+            "Z"
+        ].join(" ");
+    }
+
+    // Helper function for coordinates conversion
+    function polarToCartesian(centerX, centerY, radius, angle) {
+        return {
+            x: centerX + radius * Math.cos(angle),
+            y: centerY + radius * Math.sin(angle)
+        };
+    }
+
+    // Helper function to add labels
+    function addLabel(svg, cx, cy, radius, angle, text, color) {
+        const pos = polarToCartesian(cx, cy, radius, angle);
+        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        label.setAttribute("x", pos.x);
+        label.setAttribute("y", pos.y);
+        label.setAttribute("text-anchor", "middle");
+        label.setAttribute("dominant-baseline", "middle");
+        label.setAttribute("fill", color === upColor ? "white" : "white");
+        label.setAttribute("font-size", "10");
+        label.textContent = text;
+        svg.appendChild(label);
+    }
+}
