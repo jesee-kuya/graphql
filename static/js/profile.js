@@ -313,7 +313,7 @@ export const profile = (data) => {
     maincontainer.appendChild(innercontainer);
     document.body.appendChild(maincontainer);
     xpGraph(xpData);
-    createPieChart(upData, downData);
+    createAuditRatioChart(upData, downData);
 }
 
 const xpGraph = (xpData) => {
@@ -464,14 +464,20 @@ const xpGraph = (xpData) => {
     drawPoints();
 };
 
-const createPieChart = (upData, downData) => {
+const createAuditRatioChart = (upData, downData) => {
     // Calculate totals
     const totalUp = upData.reduce((sum, d) => sum + d.amount, 0);
     const totalDown = downData.reduce((sum, d) => sum + d.amount, 0);
-    const total = totalUp + totalDown;
     
-    // Handle edge case with no data
-    if (total === 0) return;
+    // Handle division by zero case
+    if (totalDown === 0) {
+        console.error("Cannot calculate ratio - down total is zero");
+        return;
+    }
+
+    // Calculate audit ratio
+    const auditRatio = totalUp / totalDown;
+    const ratioDisplay = auditRatio.toFixed(1);
 
     // Create SVG element
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -486,9 +492,10 @@ const createPieChart = (upData, downData) => {
     const upColor = "#4CAF50";
     const downColor = "#F44336";
 
-    // Calculate angles
-    const upAngle = (totalUp / total) * 2 * Math.PI;
-    const downAngle = (totalDown / total) * 2 * Math.PI;
+    // Calculate angles based on ratio
+    const total = auditRatio + 1;
+    const upAngle = (auditRatio / total) * 2 * Math.PI;
+    const downAngle = (1 / total) * 2 * Math.PI;
 
     // Draw Up slice
     const upPath = document.createElementNS("http://www.w3.org/2000/svg", "path");
@@ -502,11 +509,26 @@ const createPieChart = (upData, downData) => {
     downPath.setAttribute("fill", downColor);
     svg.appendChild(downPath);
 
-    // Add labels
-    addLabel(svg, centerX, centerY, radius/1.5, upAngle/2, 
-            `${((totalUp/total)*100).toFixed(1)}% UP`, upColor);
-    addLabel(svg, centerX, centerY, radius/1.5, upAngle + downAngle/2, 
-            `${((totalDown/total)*100).toFixed(1)}% DOWN`, downColor);
+    // Add central ratio display
+    const ratioText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    ratioText.setAttribute("x", centerX);
+    ratioText.setAttribute("y", centerY);
+    ratioText.setAttribute("text-anchor", "middle");
+    ratioText.setAttribute("dominant-baseline", "middle");
+    ratioText.setAttribute("font-size", "32");
+    ratioText.setAttribute("fill", "white");
+    ratioText.textContent = ratioDisplay;
+    svg.appendChild(ratioText);
+
+    // Add subtitle
+    const subText = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    subText.setAttribute("x", centerX);
+    subText.setAttribute("y", centerY + 20);
+    subText.setAttribute("text-anchor", "middle");
+    subText.setAttribute("font-size", "12");
+    subText.setAttribute("fill", "white");
+    subText.textContent = "Audit Ratio";
+    svg.appendChild(subText);
 
     // Add to DOM
     const container = document.getElementById("audit-ratio");
@@ -533,19 +555,5 @@ const createPieChart = (upData, downData) => {
             x: centerX + radius * Math.cos(angle),
             y: centerY + radius * Math.sin(angle)
         };
-    }
-
-    // Helper function to add labels
-    function addLabel(svg, cx, cy, radius, angle, text, color) {
-        const pos = polarToCartesian(cx, cy, radius, angle);
-        const label = document.createElementNS("http://www.w3.org/2000/svg", "text");
-        label.setAttribute("x", pos.x);
-        label.setAttribute("y", pos.y);
-        label.setAttribute("text-anchor", "middle");
-        label.setAttribute("dominant-baseline", "middle");
-        label.setAttribute("fill", color === upColor ? "white" : "white");
-        label.setAttribute("font-size", "10");
-        label.textContent = text;
-        svg.appendChild(label);
     }
 }
