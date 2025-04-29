@@ -106,10 +106,12 @@ export const profile = (data) => {
     let downData = data.data.user[0].downTransactions;
     let upData = data.data.user[0].upTransactions;
     let totalXp = data.data.user[0].totalXP;
+    let level = data.data.user[0].events[0].level;
     const totalXPs = totalXp.reduce((totalXPs, transaction) => {
         return transaction.type === "xp" ? totalXPs + transaction.amount : totalXPs;
     }, 0);
     console.log("Total XP is ", xpsize(totalXPs));
+    console.log("Level is ", level);
 
 
 
@@ -258,7 +260,7 @@ export const profile = (data) => {
                         <!-- XP Card -->
                         <div class="card-inner xp-item">
                             <h3 class="xp-label accent-text">Current Level</h3>
-                            <p class="xp-value">7</p>
+                            <p class="xp-value">${level}</p>
                         </div>
 
                         <!-- XP Card -->
@@ -278,8 +280,8 @@ export const profile = (data) => {
 
                     <div class="level-progress">
                         <div class="level-labels">
-                            <span>Level 7</span>
-                            <span>Level 8</span>
+                            <span>${level}</span>
+                            <span>${level + 1}</span>
                         </div>
                         <div class="progress-bar">
                             <div class="progress-indicator"
