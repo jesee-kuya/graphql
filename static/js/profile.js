@@ -105,8 +105,11 @@ export const profile = (data) => {
     let xpData = data.data.user[0].xpHistory; // downTransactions
     let downData = data.data.user[0].downTransactions;
     let upData = data.data.user[0].upTransactions;
-    let totalXP = data.data.user[0].totalXP.aggregate.sum.amount;
-    console.log("TOtal xp is ", totalXP);
+    let totalXp = data.data.user[0].totalXP;
+    const totalXPs = totalXp.reduce((totalXPs, transaction) => {
+        return transaction.type === "xp" ? totalXPs + transaction.amount : totalXPs;
+    }, 0);
+    console.log("Total XP is ", xpsize(totalXPs));
 
 
 
@@ -249,7 +252,7 @@ export const profile = (data) => {
                         <!-- XP Card -->
                         <div class="card-inner xp-item">
                             <h3 class="xp-label accent-text">Total XP</h3>
-                            <p class="xp-value">12,450</p>
+                            <p class="xp-value">${xpsize(totalXPs)[0]} ${xpsize(totalXPs)[1]}</p>
                         </div>
 
                         <!-- XP Card -->
@@ -305,7 +308,7 @@ export const profile = (data) => {
         </div>
     `
 
-   
+
 
     innercontainer.appendChild(gridlayout);
     innercontainer.appendChild(xp);
@@ -320,7 +323,7 @@ const xpGraph = (xpData) => {
     // Clear previous graph
     let container = document.querySelector(".graph-container");
     container.innerHTML = '';
-    
+
     // Create SVG element
     let lsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     lsvg.setAttribute("width", "100%");
@@ -338,7 +341,7 @@ const xpGraph = (xpData) => {
     const width = 1000;
     const height = 500;
     const padding = 50;
-    
+
     // Calculate domains
     const dates = parsedData.map(d => d.date);
     const amounts = parsedData.map(d => d.amount);
@@ -347,10 +350,10 @@ const xpGraph = (xpData) => {
     const maxAmount = Math.max(...amounts);
 
     // Scaling functions
-    const xScale = date => 
+    const xScale = date =>
         padding + ((date - minDate) / (maxDate - minDate)) * (width - 2 * padding);
-        
-    const yScale = amount => 
+
+    const yScale = amount =>
         height - padding - (amount / maxAmount) * (height - 2 * padding);
 
     // Draw functions
@@ -375,8 +378,8 @@ const xpGraph = (xpData) => {
 
         // X-axis labels (5 evenly spaced dates)
         const xTickCount = 5;
-        const xTicks = Array.from({ length: xTickCount }, (_, i) => 
-            new Date(minDate.getTime() + (i/(xTickCount-1)) * (maxDate - minDate))
+        const xTicks = Array.from({ length: xTickCount }, (_, i) =>
+            new Date(minDate.getTime() + (i / (xTickCount - 1)) * (maxDate - minDate))
         );
 
         xTicks.forEach(date => {
@@ -396,17 +399,17 @@ const xpGraph = (xpData) => {
             label.setAttribute('y', height - padding + 20);
             label.setAttribute('text-anchor', 'middle');
             label.setAttribute('font-size', '12');
-            label.textContent = date.toLocaleDateString('en-US', { 
-                month: 'short', 
-                day: 'numeric' 
+            label.textContent = date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric'
             });
             lsvg.appendChild(label);
         });
 
         // Y-axis labels (8 ticks with kB formatting)
         const yTickCount = 8;
-        const yTicks = Array.from({ length: yTickCount }, (_, i) => 
-            (i/(yTickCount-1)) * maxAmount
+        const yTicks = Array.from({ length: yTickCount }, (_, i) =>
+            (i / (yTickCount - 1)) * maxAmount
         );
 
         yTicks.forEach(amount => {
@@ -426,7 +429,7 @@ const xpGraph = (xpData) => {
             label.setAttribute('y', y + 5);
             label.setAttribute('text-anchor', 'end');
             label.setAttribute('font-size', '12');
-            label.textContent = `${(amount/1000).toFixed(1)}kB`;
+            label.textContent = `${(amount / 1000).toFixed(1)}kB`;
             lsvg.appendChild(label);
         });
     }
@@ -468,7 +471,7 @@ const createAuditRatioChart = (upData, downData) => {
     // Calculate totals
     const totalUp = upData.reduce((sum, d) => sum + d.amount, 0);
     const totalDown = downData.reduce((sum, d) => sum + d.amount, 0);
-    
+
     // Handle division by zero case
     if (totalDown === 0) {
         console.error("Cannot calculate ratio - down total is zero");
@@ -557,3 +560,13 @@ const createAuditRatioChart = (upData, downData) => {
         };
     }
 }
+
+const xpsize = (totalXp) => {
+    if (totalXp >= 1_000_000) {
+      return [Math.round((totalXp / 1_000_000)), "MB"];
+    } else if (totalXp >= 1_000) {
+      return [Math.round((totalXp / 1_000)), "KB"];
+    } else {
+      return [Math.round(totalXp), "totalXp"];
+    }
+  }
