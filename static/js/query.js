@@ -24,6 +24,10 @@ export const getData = async () => {
         transactions(where: { type: { _eq: "xp" } }) {
           amount
         }
+
+        events(where: {eventId: {_eq: 75}}) {
+          level
+        }
     
         xpHistory: transactions(
           where: { 
