@@ -494,8 +494,8 @@ const createAuditRatioChart = (upData, downData) => {
     const centerX = 100;
     const centerY = 100;
     const radius = 80;
-    const upColor = "#4CAF50";
-    const downColor = "#F44336";
+    const upColor = "#C4B5FD";
+    const downColor = "#8B5CF6";
 
     // Calculate angles based on ratio
     const total = auditRatio + 1;
