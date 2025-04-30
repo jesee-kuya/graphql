@@ -343,7 +343,7 @@ const xpGraph = (xpData) => {
         xAxis.setAttribute('y1', height - padding);
         xAxis.setAttribute('x2', width - padding);
         xAxis.setAttribute('y2', height - padding);
-        xAxis.setAttribute('stroke', 'black');
+        xAxis.setAttribute('stroke', 'white');
         lsvg.appendChild(xAxis);
 
         // Y-axis
@@ -352,7 +352,7 @@ const xpGraph = (xpData) => {
         yAxis.setAttribute('y1', padding);
         yAxis.setAttribute('x2', padding);
         yAxis.setAttribute('y2', height - padding);
-        yAxis.setAttribute('stroke', 'black');
+        yAxis.setAttribute('stroke', 'white');
         lsvg.appendChild(yAxis);
 
         // X-axis labels (5 evenly spaced dates)
@@ -369,7 +369,7 @@ const xpGraph = (xpData) => {
             tick.setAttribute('y1', height - padding);
             tick.setAttribute('x2', x);
             tick.setAttribute('y2', height - padding + 5);
-            tick.setAttribute('stroke', 'black');
+            tick.setAttribute('stroke', 'white');
             lsvg.appendChild(tick);
 
             // Date label
@@ -377,6 +377,7 @@ const xpGraph = (xpData) => {
             label.setAttribute('x', x);
             label.setAttribute('y', height - padding + 20);
             label.setAttribute('text-anchor', 'middle');
+            label.setAttribute('stroke', 'white');
             label.setAttribute('font-size', '12');
             label.textContent = date.toLocaleDateString('en-US', {
                 month: 'short',
@@ -399,7 +400,7 @@ const xpGraph = (xpData) => {
             tick.setAttribute('y1', y);
             tick.setAttribute('x2', padding);
             tick.setAttribute('y2', y);
-            tick.setAttribute('stroke', 'black');
+            tick.setAttribute('stroke', 'white');
             lsvg.appendChild(tick);
 
             // Amount label
@@ -408,6 +409,7 @@ const xpGraph = (xpData) => {
             label.setAttribute('y', y + 5);
             label.setAttribute('text-anchor', 'end');
             label.setAttribute('font-size', '12');
+            label.setAttribute('stroke', 'white');
             label.textContent = `${(amount / 1000).toFixed(1)}kB`;
             lsvg.appendChild(label);
         });
