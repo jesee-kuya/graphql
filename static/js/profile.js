@@ -110,8 +110,6 @@ export const profile = (data) => {
     const totalXPs = totalXp.reduce((totalXPs, transaction) => {
         return transaction.type === "xp" ? totalXPs + transaction.amount : totalXPs;
     }, 0);
-    console.log("Total XP is ", xpsize(totalXPs));
-    console.log("Level is ", level);
 
 
 
