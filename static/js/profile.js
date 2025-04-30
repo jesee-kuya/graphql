@@ -144,7 +144,7 @@ export const profile = (data) => {
          </div>
          <div class="badge badge-accent">
              <span><!-- Award icon --></span>
-             <span>Level 7</span>
+             <span>Level ${level}</span>
          </div>
     `;
 
