@@ -9,7 +9,7 @@ export const getData = async () => {
   query {
     event(where: { id: { _eq: 75 } }) {
       object {
-        attrs  # You'll need to parse level_config in your JS code
+        attrs
       }
     }
 
