@@ -115,14 +115,14 @@ export const profile = (data) => {
     let rank = currentRank
         .filter(rank => rank.level <= level)
         .sort((a, b) => b.level - a.level)[0];
-    console.log(rank ? rank.name : "No rank found");
 
     let nextRank = currentRank
         .filter(rank => rank.level > level)
         .sort((a, b) => a.level - b.level)[0];
-    console.log(nextRank ? nextRank.name : "No next rank found");
 
-
+    let pct = Math.round((level * 100)/ nextRank.level);
+    console.log(pct);
+    let translate = pct - 100;
 
 
 
@@ -291,10 +291,10 @@ export const profile = (data) => {
                         </div>
                         <div class="progress-bar">
                             <div class="progress-indicator"
-                                style="transform: translateX(-17%)">
+                                style="transform: translateX(${translate}%)">
                             </div>
                         </div>
-                        <div class="level-percent accent-text">83% to next level</div>
+                        <div class="level-percent accent-text">${pct}% to next rank</div>
                     </div>
                 </div>
             </div>
