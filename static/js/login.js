@@ -103,15 +103,9 @@ const auth = async (username, password) => {
 
         const data = await response.json();
         sessionStorage.setItem("token", data);
-        getIdFromJwt(data);
         getData();
     } catch (error) {
         alert(`Error during sign-in: ${error}`);
     }
 };
 
-const getIdFromJwt = (token) => {
-    const payload = token.split('.')[1];
-    const decodedPayload = JSON.parse(atob(payload));
-    sessionStorage.setItem("user_id", decodedPayload.sub);
-  }
