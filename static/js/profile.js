@@ -2,6 +2,43 @@ import { setHeader } from "./script.js";
 import { login } from "./login.js";
 
 export const profile = (data) => {
+    let username = data.data.user[0].login;
+    let campus = data.data.user[0].campus;
+    let phone = data.data.user[0].attrs.phone;
+    let email = data.data.user[0].attrs.email;
+    let dob = new Date(data.data.user[0].attrs.dateOfBirth).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+    });
+    let gender = data.data.user[0].attrs.gender;
+    let firstname = data.data.user[0].attrs.firstName;
+    let lastname = data.data.user[0].attrs.lastName;
+    let xpData = data.data.user[0].xpHistory; // downTransactions
+    let downData = data.data.user[0].downTransactions;
+    let upData = data.data.user[0].upTransactions;
+    let totalXp = data.data.user[0].totalXP;
+    let level = data.data.user[0].events[0].level;
+    const totalXPs = totalXp.reduce((totalXPs, transaction) => {
+        return transaction.type === "xp" ? totalXPs + transaction.amount : totalXPs;
+    }, 0);
+
+    let currentRank = data.data.event[0].object.attrs.ranksDefinitions;
+    let rank = currentRank
+        .filter(rank => rank.level <= level)
+        .sort((a, b) => b.level - a.level)[0];
+
+    let nextRank = currentRank
+        .filter(rank => rank.level > level)
+        .sort((a, b) => a.level - b.level)[0];
+
+    let pct = Math.round((level * 100)/ nextRank.level);
+    console.log(pct);
+    let translate = pct - 100;
+
+
+    
+
     let link = document.createElement("link");
     link.setAttribute("rel", "stylesheet");
     link.setAttribute("href", "static/css/profile.css");
@@ -89,47 +126,6 @@ export const profile = (data) => {
 
     let informationcontentspace = document.createElement("div");
     informationcontentspace.classList.add("content-space");
-
-    let username = data.data.user[0].login;
-    let campus = data.data.user[0].campus;
-    let phone = data.data.user[0].attrs.phone;
-    let email = data.data.user[0].attrs.email;
-    let dob = new Date(data.data.user[0].attrs.dateOfBirth).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-    });
-    let gender = data.data.user[0].attrs.gender;
-    let firstname = data.data.user[0].attrs.firstName;
-    let lastname = data.data.user[0].attrs.lastName;
-    let xpData = data.data.user[0].xpHistory; // downTransactions
-    let downData = data.data.user[0].downTransactions;
-    let upData = data.data.user[0].upTransactions;
-    let totalXp = data.data.user[0].totalXP;
-    let level = data.data.user[0].events[0].level;
-    const totalXPs = totalXp.reduce((totalXPs, transaction) => {
-        return transaction.type === "xp" ? totalXPs + transaction.amount : totalXPs;
-    }, 0);
-
-    let currentRank = data.data.event[0].object.attrs.ranksDefinitions;
-    let rank = currentRank
-        .filter(rank => rank.level <= level)
-        .sort((a, b) => b.level - a.level)[0];
-
-    let nextRank = currentRank
-        .filter(rank => rank.level > level)
-        .sort((a, b) => a.level - b.level)[0];
-
-    let pct = Math.round((level * 100)/ nextRank.level);
-    console.log(pct);
-    let translate = pct - 100;
-
-
-
-
-
-
-
 
     let infospace = document.createElement("div");
     infospace.classList.add("info-space");
