@@ -32,9 +32,10 @@ export const profile = (data) => {
         .filter(rank => rank.level > level)
         .sort((a, b) => a.level - b.level)[0];
 
-    let pct = Math.round((level * 100)/ nextRank.level);
+    let pct = Math.round((level * 100) / nextRank.level);
     console.log(pct);
     let translate = pct - 100;
+    let skillData = data.data.user[0].skillTypes.nodes;
 
 
 
@@ -207,34 +208,7 @@ export const profile = (data) => {
                 Skills Overview
             </h2>
         </div>
-        <div class="card-content">
-            <div class="content-space">
-                <!-- Skill Bar -->
-                <div class="skill-container">
-                    <div class="skill-header">
-                        <span class="skill-name">Algorithms</span>
-                        <span class="skill-percent accent-text">85%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-indicator"
-                            style="transform: translateX(-15%)">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Repeat for other skills -->
-                <div class="skill-container">
-                    <div class="skill-header">
-                        <span class="skill-name">Git</span>
-                        <span class="skill-percent accent-text">72%</span>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-indicator"
-                            style="transform: translateX(-28%)">
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="card-content", id="skills-chart">
         </div>
     `
     gridlayout.appendChild(information);
@@ -321,6 +295,7 @@ export const profile = (data) => {
     document.body.appendChild(maincontainer);
     xpGraph(xpData);
     createAuditRatioChart(upData, downData);
+    skillchart(skillData);
 }
 
 const xpGraph = (xpData) => {
@@ -573,6 +548,91 @@ const xpsize = (totalXp) => {
     } else {
         return [Math.round(totalXp), "totalXp"];
     }
+}
+
+const skillchart = (data) => {
+    const svgWidth = 600;
+    const svgHeight = 600;
+    const centerX = svgWidth / 2;
+    const centerY = svgHeight / 2;
+    const maxRadius = Math.min(svgWidth, svgHeight) * 0.4;
+
+    const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.setAttribute("width", svgWidth);
+    svg.setAttribute("height", svgHeight);
+    svg.setAttribute("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
+    svg.setAttribute("style", "background: #f8f9fa;");
+
+    // Draw grid circles
+    [25, 50, 75, 100].forEach(level => {
+        const radius = (level / 100) * maxRadius;
+        const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        circle.setAttribute("cx", centerX);
+        circle.setAttribute("cy", centerY);
+        circle.setAttribute("r", radius);
+        circle.setAttribute("fill", "none");
+        circle.setAttribute("stroke", "#dee2e6");
+        svg.appendChild(circle);
+    });
+
+    // Draw spokes and labels
+    data.forEach((skill, i) => {
+        const angle = (i * 2 * Math.PI / data.length) - Math.PI / 2;
+        const endX = centerX + maxRadius * Math.cos(angle);
+        const endY = centerY + maxRadius * Math.sin(angle);
+
+        // Draw spoke line
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", centerX);
+        line.setAttribute("y1", centerY);
+        line.setAttribute("x2", endX);
+        line.setAttribute("y2", endY);
+        line.setAttribute("stroke", "#dee2e6");
+        svg.appendChild(line);
+
+        // Add skill labels
+        const labelRadius = maxRadius + 30;
+        const labelX = centerX + labelRadius * Math.cos(angle);
+        const labelY = centerY + labelRadius * Math.sin(angle);
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", labelX);
+        text.setAttribute("y", labelY);
+        text.setAttribute("text-anchor", Math.abs(angle) > Math.PI / 2 ? "end" : "start");
+        text.setAttribute("fill", "#495057");
+        text.setAttribute("font-size", "12px");
+        text.textContent = skill.type.replace('skill_', '').replace(/-/g, ' ');
+        svg.appendChild(text);
+    });
+
+    // Create data polygon
+    const points = data.map((skill, i) => {
+        const angle = (i * 2 * Math.PI / data.length) - Math.PI / 2;
+        const radius = (skill.amount / 100) * maxRadius;
+        return [
+            centerX + radius * Math.cos(angle),
+            centerY + radius * Math.sin(angle)
+        ].join(',');
+    }).join(' ');
+
+    const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    polygon.setAttribute("points", points);
+    polygon.setAttribute("fill", "rgba(100, 158, 255, 0.3)");
+    polygon.setAttribute("stroke", "#4e73df");
+    polygon.setAttribute("stroke-width", "2");
+    svg.appendChild(polygon);
+
+    // Add percentage labels
+    [25, 50, 75, 100].forEach(level => {
+        const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.setAttribute("x", centerX + 5);
+        text.setAttribute("y", centerY - (level / 100 * maxRadius));
+        text.setAttribute("fill", "#6c757d");
+        text.setAttribute("font-size", "10px");
+        text.textContent = `${level}%`;
+        svg.appendChild(text);
+    });
+
+    document.getElementById('skills-chart').appendChild(svg);
 }
 
 
