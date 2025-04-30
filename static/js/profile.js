@@ -111,8 +111,13 @@ export const profile = (data) => {
         return transaction.type === "xp" ? totalXPs + transaction.amount : totalXPs;
     }, 0);
 
+    let currentRank = data.data.event[0].object.attrs.ranksDefinitions;
+    console.log(currentRank);
+    let rank = currentRank
+        .filter(rank => rank.level <= level)
+        .sort((a, b) => b.level - a.level)[0];
 
-
+    console.log(rank ? rank.name : "No rank found");
 
 
 
@@ -563,10 +568,12 @@ const createAuditRatioChart = (upData, downData) => {
 
 const xpsize = (totalXp) => {
     if (totalXp >= 1_000_000) {
-      return [Math.round((totalXp / 1_000_000)), "MB"];
+        return [Math.round((totalXp / 1_000_000)), "MB"];
     } else if (totalXp >= 1_000) {
-      return [Math.round((totalXp / 1_000)), "KB"];
+        return [Math.round((totalXp / 1_000)), "KB"];
     } else {
-      return [Math.round(totalXp), "totalXp"];
+        return [Math.round(totalXp), "totalXp"];
     }
-  }
+}
+
+
