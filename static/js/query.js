@@ -3,8 +3,6 @@ import { profile } from "./profile.js";
 export const getData = async () => {
   const endpoint = "https://learn.zone01kisumu.ke/api/graphql-engine/v1/graphql";
 
-  let userId = sessionStorage.getItem("user_id");
-
   const query = `
   query {
     event(where: { id: { _eq: 75 } }) {
@@ -13,7 +11,7 @@ export const getData = async () => {
       }
     }
 
-    user(where: { id: { _eq: "${userId}" } }) {
+    user {
       id
       profile
       campus
