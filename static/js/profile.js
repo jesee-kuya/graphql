@@ -112,12 +112,15 @@ export const profile = (data) => {
     }, 0);
 
     let currentRank = data.data.event[0].object.attrs.ranksDefinitions;
-    console.log(currentRank);
     let rank = currentRank
         .filter(rank => rank.level <= level)
         .sort((a, b) => b.level - a.level)[0];
-
     console.log(rank ? rank.name : "No rank found");
+
+    let nextRank = currentRank
+        .filter(rank => rank.level > level)
+        .sort((a, b) => a.level - b.level)[0];
+    console.log(nextRank ? nextRank.name : "No next rank found");
 
 
 
@@ -268,8 +271,8 @@ export const profile = (data) => {
 
                         <!-- XP Card -->
                         <div class="card-inner xp-item">
-                            <h3 class="xp-label accent-text">Next Level</h3>
-                            <p class="xp-value">2,550 XP needed</p>
+                            <h3 class="xp-label accent-text">Rank</h3>
+                            <p class="xp-value">${rank.name}</p>
                         </div>
 
                         <!-- Audit Ratio Pie Chart -->
@@ -283,8 +286,8 @@ export const profile = (data) => {
 
                     <div class="level-progress">
                         <div class="level-labels">
-                            <span>${level}</span>
-                            <span>${level + 1}</span>
+                            <span>${rank.name}</span>
+                            <span>${nextRank.name}</span>
                         </div>
                         <div class="progress-bar">
                             <div class="progress-indicator"
