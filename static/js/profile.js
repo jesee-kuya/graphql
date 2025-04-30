@@ -561,8 +561,7 @@ const skillchart = (data) => {
     svg.setAttribute("width", svgWidth);
     svg.setAttribute("height", svgHeight);
     svg.setAttribute("viewBox", `0 0 ${svgWidth} ${svgHeight}`);
-    svg.setAttribute("style", "background: #f8f9fa;");
-
+   
     // Draw grid circles
     [25, 50, 75, 100].forEach(level => {
         const radius = (level / 100) * maxRadius;
@@ -598,7 +597,7 @@ const skillchart = (data) => {
         text.setAttribute("x", labelX);
         text.setAttribute("y", labelY);
         text.setAttribute("text-anchor", Math.abs(angle) > Math.PI / 2 ? "end" : "start");
-        text.setAttribute("fill", "#495057");
+        text.setAttribute("fill", "#FFFFFF");
         text.setAttribute("font-size", "12px");
         text.textContent = skill.type.replace('skill_', '').replace(/-/g, ' ');
         svg.appendChild(text);
@@ -616,7 +615,7 @@ const skillchart = (data) => {
 
     const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
     polygon.setAttribute("points", points);
-    polygon.setAttribute("fill", "rgba(100, 158, 255, 0.3)");
+    polygon.setAttribute("fill", "#C4B5FD");
     polygon.setAttribute("stroke", "#4e73df");
     polygon.setAttribute("stroke-width", "2");
     svg.appendChild(polygon);
@@ -626,7 +625,7 @@ const skillchart = (data) => {
         const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
         text.setAttribute("x", centerX + 5);
         text.setAttribute("y", centerY - (level / 100 * maxRadius));
-        text.setAttribute("fill", "#6c757d");
+        text.setAttribute("fill", "#FFFFFF");
         text.setAttribute("font-size", "10px");
         text.textContent = `${level}%`;
         svg.appendChild(text);
