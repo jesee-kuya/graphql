@@ -290,7 +290,7 @@ export const profile = (data) => {
                                 style="transform: translateX(${translate}%)">
                             </div>
                         </div>
-                        <div class="level-percent accent-text">${pct}% to next rank</div>
+                        <div class="level-percent accent-text">${pct}% levels completed to next rank</div>
                     </div>
                 </div>
             </div>
