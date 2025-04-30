@@ -77,9 +77,21 @@ export const getData = async () => {
         amount
         createdAt
       }
+
+      skillTypes: transactions_aggregate(
+        distinct_on: [type]
+        where: { type: { _nin: ["xp", "level", "up", "down"] } }
+        order_by: [{ type: asc }, { amount: desc }]
+      ) {
+        nodes {
+          type
+          amount
+        }
+      }
     }
   }
 `;
+
 
 
 
