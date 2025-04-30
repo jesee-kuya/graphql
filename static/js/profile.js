@@ -37,7 +37,7 @@ export const profile = (data) => {
     let translate = pct - 100;
 
 
-    
+
 
     let link = document.createElement("link");
     link.setAttribute("rel", "stylesheet");
@@ -71,7 +71,7 @@ export const profile = (data) => {
     titleContainer.classList.add("heading");
     titleContainer.innerHTML = `
     <span class="accent-text"><!-- User icon would go here --></span>
-    User Information
+    ${rank.name} Information
 `;
 
     const logoutBtn = document.createElement('button');
