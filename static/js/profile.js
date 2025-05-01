@@ -317,14 +317,24 @@ const xpGraph = (xpData) => {
         amount: d.amount
     })).sort((a, b) => a.date - b.date);
 
+    // Calculate cumulative amounts
+    let cumulativeTotal = 0;
+    const cumulativeData = parsedData.map(d => {
+        cumulativeTotal += d.amount;
+        return {
+            date: d.date,
+            amount: cumulativeTotal
+        };
+    });
+
     // Dimensions
     const width = 1000;
     const height = 500;
     const padding = 50;
 
-    // Calculate domains
-    const dates = parsedData.map(d => d.date);
-    const amounts = parsedData.map(d => d.amount);
+    // Calculate domains based on cumulative data
+    const dates = cumulativeData.map(d => d.date);
+    const amounts = cumulativeData.map(d => d.amount);
     const minDate = new Date(Math.min(...dates.map(d => d.getTime())));
     const maxDate = new Date(Math.max(...dates.map(d => d.getTime())));
     const maxAmount = Math.max(...amounts);
@@ -356,7 +366,7 @@ const xpGraph = (xpData) => {
         yAxis.setAttribute('stroke', 'white');
         lsvg.appendChild(yAxis);
 
-        // X-axis labels (5 evenly spaced dates)
+        // X-axis labels
         const xTickCount = 5;
         const xTicks = Array.from({ length: xTickCount }, (_, i) =>
             new Date(minDate.getTime() + (i / (xTickCount - 1)) * (maxDate - minDate))
@@ -364,7 +374,6 @@ const xpGraph = (xpData) => {
 
         xTicks.forEach(date => {
             const x = xScale(date);
-            // Tick mark
             const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
             tick.setAttribute('x1', x);
             tick.setAttribute('y1', height - padding);
@@ -373,7 +382,6 @@ const xpGraph = (xpData) => {
             tick.setAttribute('stroke', 'white');
             lsvg.appendChild(tick);
 
-            // Date label
             const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             label.setAttribute('x', x);
             label.setAttribute('y', height - padding + 20);
@@ -387,7 +395,7 @@ const xpGraph = (xpData) => {
             lsvg.appendChild(label);
         });
 
-        // Y-axis labels (8 ticks with kB formatting)
+        // Y-axis labels
         const yTickCount = 8;
         const yTicks = Array.from({ length: yTickCount }, (_, i) =>
             (i / (yTickCount - 1)) * maxAmount
@@ -395,7 +403,6 @@ const xpGraph = (xpData) => {
 
         yTicks.forEach(amount => {
             const y = yScale(amount);
-            // Tick mark
             const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
             tick.setAttribute('x1', padding - 5);
             tick.setAttribute('y1', y);
@@ -404,7 +411,6 @@ const xpGraph = (xpData) => {
             tick.setAttribute('stroke', 'white');
             lsvg.appendChild(tick);
 
-            // Amount label
             const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             label.setAttribute('x', padding - 10);
             label.setAttribute('y', y + 5);
@@ -414,11 +420,11 @@ const xpGraph = (xpData) => {
             label.textContent = `${(amount / 1000).toFixed(1)}kB`;
             lsvg.appendChild(label);
         });
-    }
+    };
 
     const drawLine = () => {
         let path = '';
-        parsedData.forEach((d, i) => {
+        cumulativeData.forEach((d, i) => {
             const x = xScale(d.date);
             const y = yScale(d.amount);
             path += `${i === 0 ? 'M' : 'L'} ${x},${y} `;
@@ -430,10 +436,10 @@ const xpGraph = (xpData) => {
         pathElement.setAttribute('stroke', '#4a90e2');
         pathElement.setAttribute('stroke-width', '2');
         lsvg.appendChild(pathElement);
-    }
+    };
 
     const drawPoints = () => {
-        parsedData.forEach(d => {
+        cumulativeData.forEach(d => {
             const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             circle.setAttribute('cx', xScale(d.date));
             circle.setAttribute('cy', yScale(d.amount));
@@ -441,7 +447,7 @@ const xpGraph = (xpData) => {
             circle.setAttribute('fill', '#e74c3c');
             lsvg.appendChild(circle);
         });
-    }
+    };
 
     // Draw all elements
     drawAxis();
