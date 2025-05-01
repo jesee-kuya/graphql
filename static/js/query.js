@@ -108,14 +108,14 @@ export const getData = async () => {
     })
 
     if (!response.ok) {
-      throw new Error("Network response was not ok");
+      throw new Error("Session expired. Please login again.");
     }
     const data = await response.json();
     console.log(data);
     profile(data);
   } catch (error) {
     login();
-    showAlert(`Error during sign-in: ${error}`);
+    showAlert(`Error: ${error}`);
   }
 
 }
