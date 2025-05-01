@@ -9,12 +9,14 @@ export const login = () => {
 
     document.body.innerHTML = "";
 
-    document.body.innerHTML = `
-    <div id="custom-alert" class="alert alert-error" style="display: none;"></div>
-    `
-
     let logincontainer = document.createElement("div");
     logincontainer.classList.add("login-container");
+    let alert = document.createElement("div");
+    alert.setAttribute("id", "custom-alert");
+    alert.classList.add("alert");
+    alert.classList.add("alert-error");
+    alert.style.display = "none";
+    logincontainer.appendChild(alert);
 
     let form = document.createElement("form");
     form.classList.add("login-form");
@@ -82,7 +84,7 @@ export const login = () => {
         const password = passwordInput.value;
 
         if (username === "" || password === "") {
-            alert("Please fill in all fields");
+            showAlert("Please fill in all fields");
             return;
         }
 
@@ -102,14 +104,14 @@ const auth = async (username, password) => {
         });
 
         if (!response.ok) {
-            throw new Error("Network response was not ok");
+            throw new Error("Wrong password or username");
         }
 
         const data = await response.json();
         sessionStorage.setItem("token", data);
         getData();
     } catch (error) {
-        alert(`Error during sign-in: ${error}`);
+        showAlert(`Error: ${error}`);
     }
 };
 
