@@ -33,7 +33,6 @@ export const profile = (data) => {
         .sort((a, b) => a.level - b.level)[0];
 
     let pct = Math.round((level * 100) / nextRank.level);
-    console.log(pct);
     let translate = pct - 100;
     let skillData = data.data.user[0].skillTypes.nodes;
 
@@ -299,7 +298,6 @@ export const profile = (data) => {
 }
 
 const xpGraph = (xpData) => {
-    console.log(xpData);
     // Clear previous graph
     let container = document.querySelector(".graph-container");
     container.innerHTML = '';
