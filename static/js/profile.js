@@ -299,6 +299,7 @@ export const profile = (data) => {
 }
 
 const xpGraph = (xpData) => {
+    console.log(xpData);
     // Clear previous graph
     let container = document.querySelector(".graph-container");
     container.innerHTML = '';
@@ -635,5 +636,3 @@ const skillchart = (data) => {
 
     document.getElementById('skills-chart').appendChild(svg);
 }
-
-
