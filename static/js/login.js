@@ -9,6 +9,10 @@ export const login = () => {
 
     document.body.innerHTML = "";
 
+    document.body.innerHTML = `
+    <div id="custom-alert" class="alert alert-error" style="display: none;"></div>
+    `
+
     let logincontainer = document.createElement("div");
     logincontainer.classList.add("login-container");
 

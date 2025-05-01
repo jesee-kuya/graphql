@@ -1,4 +1,5 @@
 import { profile } from "./profile.js";
+import { showAlert, login } from "./login.js";
 
 export const getData = async () => {
   const endpoint = "https://learn.zone01kisumu.ke/api/graphql-engine/v1/graphql";
@@ -113,7 +114,8 @@ export const getData = async () => {
     console.log(data);
     profile(data);
   } catch (error) {
-    alert(`Error during sign-in: ${error}`);
+    login();
+    showAlert(`Error during sign-in: ${error}`);
   }
 
 }
