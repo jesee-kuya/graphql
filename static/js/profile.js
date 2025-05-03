@@ -1,5 +1,5 @@
 import { setHeader } from "./script.js";
-import { login } from "./login.js";
+import { login, showAlert } from "./login.js";
 
 export const profile = (data) => {
     let username = data.data.user[0].login;
@@ -460,7 +460,7 @@ const createAuditRatioChart = (upData, downData) => {
 
     // Handle division by zero case
     if (totalDown === 0) {
-        console.error("Cannot calculate ratio - down total is zero");
+        showAlert("Cannot calculate ratio - down total is zero");
         return;
     }
 

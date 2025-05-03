@@ -111,7 +111,6 @@ export const getData = async () => {
       throw new Error("Session expired. Please login again.");
     }
     const data = await response.json();
-    console.log(data);
     profile(data);
   } catch (error) {
     login();
