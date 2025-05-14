@@ -2,6 +2,7 @@ import { profile } from "./profile.js";
 import { showAlert, login } from "./login.js";
 
 export const getData = async () => {
+  showAlert("Loading...", "info");
   const endpoint = "https://learn.zone01kisumu.ke/api/graphql-engine/v1/graphql";
 
   const query = `
