@@ -4,7 +4,7 @@ A dynamic web dashboard that interfaces with the Learn Zone 01 Kisumu GraphQL AP
 
 
 ## Live Demo
-🔗 [https://jesee-kuya.github.io/graphql](https://jesee-kuya.github.io/graphql)
+🔗 [graphql](https://jesee-kuya.github.io/graphql)
 
 ## Features
 - 🔒 JWT-based authentication
